@@ -28,6 +28,7 @@ module ISO8583
       end
 
       start_index = 0
+      # bitmapの各ビットに対応するデータフィールドを取得する
       (1..9).each do |i|
         if @bitmap[i] == '1'
           case i+1
