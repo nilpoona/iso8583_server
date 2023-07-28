@@ -1,5 +1,6 @@
 require 'socket'
 require './message.rb'
+require 'ractor/tvar'
 
 class Server
   def initialize(port)
@@ -34,20 +35,22 @@ class Server
   private
 
   def connection_manager
-    Ractor.new do
-      max_workers = 10
-      workers = 0
+    tv = Ractor::TVar.new(0)
+    Ractor.new tv do |tv|
+      max_connections = 10
       loop do
         message = Ractor.receive
-        case message
-        when :increment
-          workers += 1
-        when :decrement
-          workers -= 1
-          workers = 0 if workers < 0
+        Ractor.atomically do
+          case message
+          when :increment
+            tv.value += 1
+          when :decrement
+            tv.value -= 1
+            tv.value = 0 if tv.value < 0
+          end
         end
 
-        if workers < max_workers
+        if tv.value < max_connections
           Ractor.yield :ready
         else
           Ractor.yield :wait

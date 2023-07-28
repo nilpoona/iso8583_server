@@ -1,0 +1,13 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ractor-tvar (0.4.0)
+
+PLATFORMS
+  x86_64-darwin-21
+
+DEPENDENCIES
+  ractor-tvar
+
+BUNDLED WITH
+   2.4.10
