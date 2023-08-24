@@ -4,11 +4,14 @@ require 'ractor/tvar'
 
 class Server
   def initialize(port)
+    @port = port
     @server = TCPServer.new(port)
     @connection_manager = connection_manager
   end
 
   def run!
+    p "Server is running on port :#{@port}"
+
     loop do
       client = @server.accept
 
